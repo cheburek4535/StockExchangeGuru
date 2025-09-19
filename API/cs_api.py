@@ -2,6 +2,7 @@ import json
 import requests
 from logger import logger
 import time
+from functions.cs_analyzer import analyze_skins
 
 APP_ID = 730
 ITEMS_PER_PAGE = 100
@@ -49,7 +50,6 @@ def fetch_bitskins_market(offset=0, limit=ITEMS_PER_PAGE, filters=None):
         return None
 
 
-
 def run_cs_items_collecting():
     all_items = []
     offset = 0
@@ -58,13 +58,13 @@ def run_cs_items_collecting():
     filters = {
         "price_from": 10000,
         "price_to": 15000,
-        "name": "G3SG1 | Flux (Field-Tested)"
+        "name": "AK-47 | Wintergreen (Minimal Wear)"
 
     }
 
-    if filters["name"]:
+    if filters.get("name"):
         filters["price_from"] = 10
-        filters["price_to"] = 10000000
+        filters["price_to"] = 100000
         max_price_to_fetch = 999999999999
 
     logger.info("Начинается сбор данных с BitSkins...")
@@ -85,27 +85,34 @@ def run_cs_items_collecting():
 
         #offset += len(items_in_batch)
 
+        if items_in_batch:
+            # Получаем все цены из батча
+            prices_in_batch = [item.get('price', 0) for item in items_in_batch]
+            # Находим максимальную цену
+            max_price_in_batch = max(prices_in_batch) if prices_in_batch else 0
+            # Вычисляем plus как разницу между максимальной ценой и текущим price_from
+            plus = max(1, max_price_in_batch - filters["price_from"])
 
-        plus = max(1, items_in_batch[-1].get('price') - filters["price_from"])
-        print(f"Прибавляем к цене {plus}")
+            print(f"Максимальная цена в батче: {max_price_in_batch}, прибавляем: {plus}")
+        else:
+            plus = 1
 
         filters["price_from"] += plus
         filters["price_to"] += plus
 
-
-
-
         time.sleep(2)
+
 
     logger.info(f"Сбор завершен. Всего собрано {len(all_items)} предметов.")
     print(all_items[:1])
     with open('../cs_items.json', 'w', encoding='utf-8') as f:
         json.dump(all_items, f, ensure_ascii=False, indent=4)
 
+    return all_items
 
-run_cs_items_collecting()
 
 
+print(f"Лучшие предметы: {analyze_skins(run_cs_items_collecting())['lowest_price']}\n\n{analyze_skins(run_cs_items_collecting())['lowest_float']}\n\n{analyze_skins(run_cs_items_collecting())['best_stickers']}\n\n{analyze_skins(run_cs_items_collecting())['best_balanced']}")
 
 
 
