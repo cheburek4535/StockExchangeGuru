@@ -62,6 +62,11 @@ def run_dota_items_collecting():
 
     }
 
+    if filters["name"]:
+        filters["price_from"] = 10
+        filters["price_to"] = 100000000
+        max_price_to_fetch = 99999999999999
+
     logger.info("Начинается сбор данных с BitSkins...")
 
     while filters['price_from'] < max_price_to_fetch:
@@ -94,7 +99,7 @@ def run_dota_items_collecting():
 
     logger.info(f"Сбор завершен. Всего собрано {len(all_items)} предметов.")
     print(all_items[:1])
-    with open('cs_items.json', 'w', encoding='utf-8') as f:
+    with open('../cs_items.json', 'w', encoding='utf-8') as f:
         json.dump(all_items, f, ensure_ascii=False, indent=4)
 
 
