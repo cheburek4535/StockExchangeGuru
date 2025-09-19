@@ -3,7 +3,7 @@ import requests
 from logger import logger
 import time
 
-APP_ID = 570
+APP_ID = 730
 ITEMS_PER_PAGE = 100
 API_KEY = '59be3bc7a7ef778a565390bac7c6fac3a4b97dff71bd951392ccb048a2563377'
 
@@ -50,7 +50,7 @@ def fetch_bitskins_market(offset=0, limit=ITEMS_PER_PAGE, filters=None):
 
 
 
-def run_dota_items_collecting():
+def run_cs_items_collecting():
     all_items = []
     offset = 0
     total_items_to_fetch = 20
@@ -94,8 +94,42 @@ def run_dota_items_collecting():
 
     logger.info(f"Сбор завершен. Всего собрано {len(all_items)} предметов.")
     print(all_items[:1])
-    with open('cs_items.json', 'w', encoding='utf-8') as f:
+    with open('../cs_items.json', 'w', encoding='utf-8') as f:
         json.dump(all_items, f, ensure_ascii=False, indent=4)
 
 
-run_dota_items_collecting()
+run_cs_items_collecting()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# auth_key = API_KEY
+# data = {
+#   "limit": 30,
+#   "offset": 0,
+#   "where": {
+#     "price_from": 1000,
+#     "price_to": 5000,
+#     "skin_name": "%glock%",
+#     "tradehold_to": 5
+#   }
+# }
+#
+# headers = {'x-apikey': auth_key}
+# res = requests.post('https://api.bitskins.com/market/search/730', headers=headers, json=data)
+# response = json.loads(res.text)
+# print(response)
