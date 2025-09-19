@@ -64,7 +64,8 @@ def run_cs_items_collecting():
 
     if filters["name"]:
         filters["price_from"] = 10
-        filters["price_to"] = 1000000
+        filters["price_to"] = 10000000
+        max_price_to_fetch = 999999999999
 
     logger.info("Начинается сбор данных с BitSkins...")
 
