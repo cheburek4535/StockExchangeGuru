@@ -58,9 +58,13 @@ def run_cs_items_collecting():
     filters = {
         "price_from": 10000,
         "price_to": 15000,
-        #"name": "G3SG1 | Flux (Field-Tested)"
+        "name": "G3SG1 | Flux (Field-Tested)"
 
     }
+
+    if filters["name"]:
+        filters["price_from"] = 10
+        filters["price_to"] = 1000000
 
     logger.info("Начинается сбор данных с BitSkins...")
 
@@ -94,7 +98,7 @@ def run_cs_items_collecting():
 
     logger.info(f"Сбор завершен. Всего собрано {len(all_items)} предметов.")
     print(all_items[:1])
-    with open('cs_items.json', 'w', encoding='utf-8') as f:
+    with open('../cs_items.json', 'w', encoding='utf-8') as f:
         json.dump(all_items, f, ensure_ascii=False, indent=4)
 
 
